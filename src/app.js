@@ -1,4 +1,4 @@
-import express from " express";
+import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 
@@ -18,9 +18,26 @@ app.use(express.json({limit:"16kb"}));
 app.use(express.urlencoded({extended:true , limit:"16kb"}));///extended means you can endode nested objects too and this is not compulsory to write
 
 //lets say you want to store some public assets or folders (photo's , video's , pdf's) in your server you can use This
-app.use(express.statis("public")) //public is name of asset / folder and this is also not compulsory to name
+app.use(express.static("public")) //public is name of asset / folder and this is also not compulsory to name
 
 //cookie parser is basically used to access cookies/secure cookies from user browser or set cookie into the browser basically do CRUD operation on it
-app.use(cookie-cookieParser());
+app.use(cookieParser());
+
+
+
+//routes import this is how it is imported
+
+import userRouter from "./routes/user.routes.js";
+
+
+//routes declaration this is done because as you are importing routes you need middlewares first before routes 
+//also its important if we are defining our API we should mention version 
+app.use("/api/v1/users" , userRouter);
+//so now the route looks like http://localhost:8000/api/v1/users/register
+
+
+// app.use("/users", userRouter);
+//so now the route looks like http://localhost:8000/users/register
+
 
 export {app};
