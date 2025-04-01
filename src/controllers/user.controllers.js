@@ -1,10 +1,12 @@
 import { asyncHandler } from "../utils/asyncHandler.js";
 import {APIError} from "../utils/APIError.js";
-import {User} from '../models//user.model.js';
+import {User} from '../models/user.model.js';
 import {uploadOnCloudinary} from "../utils/cloudinary.js";
 import { APIResponse } from "../utils/APIResponse.js";
 
 const registerUser = asyncHandler(async (req , res)=>{
+    // console.log("Received files:", req.files); 
+
     //steps to register a user
     //step 1 -> get user-details from frontend
     //step-2 -> check for validation
@@ -33,7 +35,7 @@ const registerUser = asyncHandler(async (req , res)=>{
     }
 
     //step-3
-    const existedUser = User.findOne({//you can also use find method
+    const existedUser = await User.findOne({//you can also use find method
         $or: [{ username },{ email }]
     });
 
@@ -42,26 +44,31 @@ const registerUser = asyncHandler(async (req , res)=>{
     }
 
     //step-4
-    const avatarLocalpath = req.files?.avatar[0]?.path;
-    const coverimageLocalpath = req.files?.coverimage[0]?.path;
+    const avatarLocalpath = req.files?.["avatar"]?.[0]?.path; // Cloudinary auto-generates a URL
+    const coverimageLocalpath = req.files?.["coverimage"]?.[0]?.path;
+
+    //basic way to find if path exists or not
+    // if(req.files && Array.isArray(req.files.coverimage) && req.files.coverimage.length() > 0){
+    //     coverimageLocalpath = req.files.coverimage[0].path;
+    // }
 
     if(!avatarLocalpath){
         throw new APIError(400 , "Avatar fileis required");
     }
 
     //step-5
-    const avatar = await uploadOnCloudinary(avatarLocalpath);
-    const coverimage = await uploadOnCloudinary(coverimageLocalpath);
+    const avatarupload = await uploadOnCloudinary(avatarLocalpath);
+    const coverimageupload = coverimageLocalpath ? await uploadOnCloudinary(coverimageLocalpath) : null;
 
-    if(!avatar){
+    if(!avatarupload){
         throw new APIError(400 , "Avatar fileis required");
     }
 
     //step-6
     const user = await User.create({
         fullname,
-        avatar: avatar.url,
-        coverimage: coverimage?.url || "",
+        avatar: avatarupload?.url,
+        coverimage: coverimageupload?.url || "",
         email,
         password,
         username: username.toLowerCase(),

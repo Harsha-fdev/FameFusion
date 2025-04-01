@@ -9,23 +9,24 @@ cloudinary.config({
 });
 
 //Another production level of uploading a file  
-const uploadOnCloudinary = async (localFilePath)=>{
+const uploadOnCloudinary = async (localFilePath) => {
     try {
-        if(localFilePath) return null;
-        //upload file on cloudinary
-        const response = await cloudinary.uploader.upload(localFilePath , {
+        if (!localFilePath) return null;
+        
+        const response = await cloudinary.uploader.upload(localFilePath, {
             resource_type: "auto"
-        })
-        //file has been uploaded successfully
-        console.log("file uploaded successfully" , response.url);
+        });
+
+        fs.unlinkSync(localFilePath)
+
         return response;
     } catch (error) {
-        fs.unlinkSync(localFilePath);//removes temporarily saved localFilePath in our server as our operation got saved
+        console.error("Cloudinary upload error:", error);
         return null;
     }
 }
 
-export {uploadOnCloudinary};
+export { uploadOnCloudinary };
 
 
 //direct way to upload file

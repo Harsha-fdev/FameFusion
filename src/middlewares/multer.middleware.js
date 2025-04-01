@@ -1,4 +1,4 @@
-import multer from " multer";
+import multer from "multer";
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {//cb means callback
@@ -6,10 +6,12 @@ const storage = multer.diskStorage({
     },
     filename: function (req, file, cb) {
       const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9)
-      cb(null, file.originalname);//file.originalname is not a good practise for now lets go with it
+      cb(null, uniqueSuffix + '_' + file.originalname);//file.originalname is not a good practise for now lets go with it
     }
   })
   
   const upload = multer({
      storage, //storage: storage in ES6 u can directly write 
     })
+
+export {upload};
