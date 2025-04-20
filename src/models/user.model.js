@@ -47,7 +47,7 @@ const userSchema = new Schema(
     {timestamps:true}
 )
 
-//here in callback dont use arraow function as it doesnot have this reference which might createproblem later 
+//here in callback dont use arrow function as it doesnot have this reference which might create problem later 
 userSchema.pre("save" , async function(next){
     if(!this.isModified("password")) return next();
 

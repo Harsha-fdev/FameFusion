@@ -5,7 +5,7 @@ import cookieParser from "cookie-parser";
 const app = express();
 
 app.use(cors({
-    origin:process.env.CORS_ORIGIN,
+    origin:process.env.CORS_ORIGIN,  //process.env.CORS_ORIGIN
     credentials:true
 }));
 
@@ -15,7 +15,7 @@ app.use(cors({
 app.use(express.json({limit:"16kb"}));
 
 //there is slight issue when we get data from url so to handle that we do the following
-app.use(express.urlencoded({extended:true , limit:"16kb"}));///extended means you can endode nested objects too and this is not compulsory to write
+app.use(express.urlencoded({extended:true, limit:"16kb" }));///extended means you can encode nested objects too and this is not compulsory to write
 
 //lets say you want to store some public assets or folders (photo's , video's , pdf's) in your server you can use This
 app.use(express.static("public")) //public is name of asset / folder and this is also not compulsory to name
