@@ -19,14 +19,28 @@ const uploadOnCloudinary = async (localFilePath) => {
 
         fs.unlinkSync(localFilePath)
 
-        return response;
+        return {
+            url: response.url,
+            public_id: response.public_id
+        };
     } catch (error) {
         console.error("Cloudinary upload error:", error);
         return null;
     }
 }
 
-export { uploadOnCloudinary };
+const deleteFromCloudinary = async(public_id) => {
+    try {
+        const result = await cloudinary.uploader.destroy(public_id);
+        console.log("Cloudinary delete result:", result);
+        return result;
+    } catch (error) {
+        console.log("Cloudinary delete error" , error);
+        return null;
+    }
+}
+
+export { uploadOnCloudinary , deleteFromCloudinary};
 
 
 //direct way to upload file
